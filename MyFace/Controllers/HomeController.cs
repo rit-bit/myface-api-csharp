@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyFace.Models;
+using MyFace.Models.View;
 
 namespace MyFace.Controllers
 {
+    [Route("")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,16 +20,20 @@ namespace MyFace.Controllers
             _logger = logger;
         }
 
+        [HttpGet("")]
         public IActionResult Index()
         {
-            return View();
+            // Just send users to the main post feed.
+            return RedirectToAction("PostsPage", "Posts");
         }
 
+        [HttpGet("/privacy")]
         public IActionResult Privacy()
         {
             return View();
         }
 
+        [HttpGet("/error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
