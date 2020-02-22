@@ -1,34 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFace.Models.Request;
-using MyFace.Models.View;
+using MyFace.Models.Response;
 using MyFace.Repositories;
 
 namespace MyFace.Controllers
 {
+    [ApiController]
     [Route("/posts")]
-    public class PostsController : Controller
+    public class PostsController : ControllerBase
     {
         private readonly IPostsRepo _posts;
-        private readonly IInteractionsRepo _interactions;
 
-        public PostsController(IPostsRepo posts, IInteractionsRepo interactions)
+        public PostsController(IPostsRepo posts)
         {
             _posts = posts;
-            _interactions = interactions;
         }
         
         [HttpGet("")]
-        public IActionResult PostsPage(int pageNumber = 0, int pageSize = 10)
+        public ActionResult<PostListResponseModel> ListPosts(int pageNumber = 0, int pageSize = 10)
         {
             var posts = _posts.GetAll(pageNumber, pageSize);
-            var viewModel = new PostsViewModel(posts);
-            return View(viewModel);
+            return new PostListResponseModel(posts);
         }
 
-        [HttpGet("create")]
-        public IActionResult CreatePostPage()
+        [HttpGet("{id}")]
+        public ActionResult<PostResponseModel> PostDetails([FromRoute] int id)
         {
-            return View();
+            var post = _posts.GetById(id);
+            return new PostResponseModel(post);
         }
 
         [HttpPost("create")]
@@ -36,19 +35,22 @@ namespace MyFace.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("CreatePostPage", newPost);
+                return BadRequest(ModelState);
             }
             
-            _posts.CreatePost(newPost);
-            return RedirectToAction("PostsPage");
+            var post = _posts.CreatePost(newPost);
+
+            var url = Url.Action("PostDetails", post.Id);
+            var postResponse = new PostResponseModel(post);
+            return Created(url, postResponse);
 
         }
 
         [HttpPost("{id}/add-interaction")]
-        public IActionResult AddInteraction(int id, CreateInteractionRequestModel newInteraction)
+        public IActionResult AddInteraction([FromRoute] int id, CreateInteractionRequestModel newInteraction)
         {
-            _interactions.Create(newInteraction, id);
-            return RedirectToAction("PostsPage");
+            var post = _posts.AddInteraction(id, newInteraction);
+            return new OkObjectResult(post);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace MyFace.Repositories
     {
         IEnumerable<User> GetAll(int pageNumber, int pageSize);
         User GetById(int id);
-        void Create(CreateUserRequestModel newUser);
+        User Create(CreateUserRequestModel newUser);
     }
     
     public class UsersRepo : IUsersRepo
@@ -26,7 +26,8 @@ namespace MyFace.Repositories
         {
             return _context.Users
                 .Include(u => u.Posts)
-                .Include(u => u.Interactions)
+                .Include(u => u.Interactions).ThenInclude(i => i.User)
+                .Include(u => u.Interactions).ThenInclude(i => i.Post)
                 .OrderBy(u => u.Username)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
@@ -36,12 +37,14 @@ namespace MyFace.Repositories
         {
             return _context.Users
                 .Include(u => u.Posts)
+                .Include(u => u.Interactions).ThenInclude(i => i.User)
+                .Include(u => u.Interactions).ThenInclude(i => i.Post)
                 .Single(user => user.Id == id);
         }
 
-        public void Create(CreateUserRequestModel newUser)
+        public User Create(CreateUserRequestModel newUser)
         {
-            _context.Users.Add(new User
+            var insertResponse = _context.Users.Add(new User
             {
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
@@ -51,6 +54,8 @@ namespace MyFace.Repositories
                 CoverImageUrl = newUser.CoverImageUrl,
             });
             _context.SaveChanges();
+
+            return insertResponse.Entity;
         }
     }
 }

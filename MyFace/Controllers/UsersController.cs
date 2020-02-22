@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyFace.Models.Request;
-using MyFace.Models.View;
+using MyFace.Models.Response;
 using MyFace.Repositories;
 
 namespace MyFace.Controllers
 {
+    [ApiController]
     [Route("/users")]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
         private readonly IUsersRepo _users;
 
@@ -16,25 +17,17 @@ namespace MyFace.Controllers
         }
         
         [HttpGet("")]
-        public IActionResult UsersPage(int pageNumber = 0, int pageSize = 10)
+        public ActionResult<UserListResponseModel> ListUsers(int pageNumber = 0, int pageSize = 10)
         {
             var users = _users.GetAll(pageNumber, pageSize);
-            var viewModel = new UsersViewModel(users);
-            return View(viewModel);
+            return new UserListResponseModel(users);
         }
 
         [HttpGet("{id}")]
-        public IActionResult UserPage(int id)
+        public ActionResult<UserResponseModel> UserDetails([FromRoute] int id)
         {
             var user = _users.GetById(id);
-            var viewModel = new UserViewModel(user);
-            return View(viewModel);
-        }
-
-        [HttpGet("create")]
-        public IActionResult CreateUserPage()
-        {
-            return View();
+            return new UserResponseModel(user);
         }
 
         [HttpPost("create")]
@@ -42,11 +35,14 @@ namespace MyFace.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("CreateUserPage", newUser);
+                return BadRequest(ModelState);
             }
             
-            _users.Create(newUser);
-            return RedirectToAction("UsersPage");
+            var user = _users.Create(newUser);
+
+            var url = Url.Action("UserDetails", user.Id);
+            var responseViewModel = new UserResponseModel(user);
+            return Created(url, responseViewModel);
         }
     }
 }
