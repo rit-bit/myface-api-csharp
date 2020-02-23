@@ -9,7 +9,8 @@ namespace MyFace.Repositories
 {
     public interface IPostsRepo
     {
-        IEnumerable<Post> GetAll(int pageNumber, int pageSize);
+        IEnumerable<Post> GetAll(SearchRequestModel searchModel);
+        int Count();
         Post GetById(int id);
         Post CreatePost(CreatePostRequestModel postModel);
         Post AddInteraction(int id, CreateInteractionRequestModel newInteraction);
@@ -24,17 +25,22 @@ namespace MyFace.Repositories
             _context = context;
         }
         
-        public IEnumerable<Post> GetAll(int pageNumber, int pageSize)
+        public IEnumerable<Post> GetAll(SearchRequestModel searchModel)
         {
             return _context.Posts
                 .Include(p => p.User)
                 .Include(p => p.Interactions).ThenInclude(i => i.User)
                 .Include(p => p.Interactions).ThenInclude(i => i.Post)
                 .OrderByDescending(p => p.PostedAt)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
+                .Skip((searchModel.Page - 1) * searchModel.PageSize)
+                .Take(searchModel.PageSize);
         }
-        
+
+        public int Count()
+        {
+            return _context.Posts.Count();
+        }
+
         public Post GetById(int id)
         {
             return _context.Posts

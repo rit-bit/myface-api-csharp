@@ -8,7 +8,7 @@ namespace MyFace.Controllers
     [ApiController]
     [Route("/posts")]
     public class PostsController : ControllerBase
-    {
+    {    
         private readonly IPostsRepo _posts;
 
         public PostsController(IPostsRepo posts)
@@ -17,10 +17,11 @@ namespace MyFace.Controllers
         }
         
         [HttpGet("")]
-        public ActionResult<PostListResponseModel> ListPosts(int pageNumber = 0, int pageSize = 10)
+        public ActionResult<PostListResponseModel> ListPosts([FromQuery] SearchRequestModel searchModel)
         {
-            var posts = _posts.GetAll(pageNumber, pageSize);
-            return new PostListResponseModel(posts);
+            var posts = _posts.GetAll(searchModel);
+            var postCount = _posts.Count();
+            return PostListResponseModel.Create(searchModel, posts, postCount);
         }
 
         [HttpGet("{id}")]

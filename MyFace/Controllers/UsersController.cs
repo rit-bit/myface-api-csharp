@@ -17,10 +17,11 @@ namespace MyFace.Controllers
         }
         
         [HttpGet("")]
-        public ActionResult<UserListResponseModel> ListUsers(int pageNumber = 0, int pageSize = 10)
+        public ActionResult<UserListResponseModel> ListUsers([FromQuery] SearchRequestModel searchModel)
         {
-            var users = _users.GetAll(pageNumber, pageSize);
-            return new UserListResponseModel(users);
+            var users = _users.GetAll(searchModel);
+            var userCount = _users.Count();
+            return UserListResponseModel.Create(searchModel, users, userCount);
         }
 
         [HttpGet("{id}")]
