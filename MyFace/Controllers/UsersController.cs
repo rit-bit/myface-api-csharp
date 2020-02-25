@@ -20,7 +20,7 @@ namespace MyFace.Controllers
         public ActionResult<UserListResponseModel> ListUsers([FromQuery] SearchRequestModel searchModel)
         {
             var users = _users.GetAll(searchModel);
-            var userCount = _users.Count();
+            var userCount = _users.Count(searchModel);
             return UserListResponseModel.Create(searchModel, users, userCount);
         }
 

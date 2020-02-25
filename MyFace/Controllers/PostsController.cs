@@ -20,7 +20,7 @@ namespace MyFace.Controllers
         public ActionResult<PostListResponseModel> ListPosts([FromQuery] SearchRequestModel searchModel)
         {
             var posts = _posts.GetAll(searchModel);
-            var postCount = _posts.Count();
+            var postCount = _posts.Count(searchModel);
             return PostListResponseModel.Create(searchModel, posts, postCount);
         }
 

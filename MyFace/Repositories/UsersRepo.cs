@@ -9,7 +9,7 @@ namespace MyFace.Repositories
     public interface IUsersRepo
     {
         IEnumerable<User> GetAll(SearchRequestModel searchModel);
-        int Count();
+        int Count(SearchRequestModel searchModel);
         User GetById(int id);
         User Create(CreateUserRequestModel newUser);
     }
@@ -29,14 +29,28 @@ namespace MyFace.Repositories
                 .Include(u => u.Posts)
                 .Include(u => u.Interactions).ThenInclude(i => i.User)
                 .Include(u => u.Interactions).ThenInclude(i => i.Post)
+                .Where(p => searchModel.Search == null || 
+                            (
+                                p.FirstName.ToLower().Contains(searchModel.Search) ||
+                                p.LastName.ToLower().Contains(searchModel.Search) ||
+                                p.Email.ToLower().Contains(searchModel.Search) ||
+                                p.Username.ToLower().Contains(searchModel.Search)
+                            ))
                 .OrderBy(u => u.Username)
                 .Skip((searchModel.Page - 1) * searchModel.PageSize)
                 .Take(searchModel.PageSize);
         }
 
-        public int Count()
+        public int Count(SearchRequestModel searchModel)
         {
-            return _context.Users.Count();
+            return _context.Users
+                .Count(p => searchModel.Search == null || 
+                            (
+                                p.FirstName.ToLower().Contains(searchModel.Search) ||
+                                p.LastName.ToLower().Contains(searchModel.Search) ||
+                                p.Email.ToLower().Contains(searchModel.Search) ||
+                                p.Username.ToLower().Contains(searchModel.Search)
+                            ));
         }
 
         public User GetById(int id)

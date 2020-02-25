@@ -10,7 +10,7 @@ namespace MyFace.Repositories
     public interface IPostsRepo
     {
         IEnumerable<Post> GetAll(SearchRequestModel searchModel);
-        int Count();
+        int Count(SearchRequestModel searchModel);
         Post GetById(int id);
         Post CreatePost(CreatePostRequestModel postModel);
         Post AddInteraction(int id, CreateInteractionRequestModel newInteraction);
@@ -32,13 +32,15 @@ namespace MyFace.Repositories
                 .Include(p => p.Interactions).ThenInclude(i => i.User)
                 .Include(p => p.Interactions).ThenInclude(i => i.Post)
                 .OrderByDescending(p => p.PostedAt)
+                .Where(p => searchModel.Search == null || p.Message.ToLower().Contains(searchModel.Search))
                 .Skip((searchModel.Page - 1) * searchModel.PageSize)
                 .Take(searchModel.PageSize);
         }
 
-        public int Count()
+        public int Count(SearchRequestModel searchModel)
         {
-            return _context.Posts.Count();
+            return _context.Posts
+                .Count(p => searchModel.Search != null && p.Message.Contains(searchModel.Search));
         }
 
         public Post GetById(int id)

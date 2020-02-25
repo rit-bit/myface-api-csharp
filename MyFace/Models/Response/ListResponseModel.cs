@@ -8,14 +8,50 @@ namespace MyFace.Models.Response
     public class ListResponseModel<T>
     {
         private readonly string _path;
+        private readonly string _searchTerm;
         
         public IEnumerable<T> Items { get; }
         public int TotalNumberOfItems { get; }
         public int Page { get; }
         public int PageSize { get; }
 
-        public string NextPage => HasNextPage() ? null : $"/{_path}?page={Page + 1}&pageNumber={PageSize}";
-        public string PreviousPage => Page <= 1 ? null : $"/{_path}?page={Page - 1}&pageNumber={PageSize}";
+        public string NextPage
+        {
+            get
+            {
+                if (!HasNextPage())
+                {
+                    return null;
+                }
+                
+                var url = $"/{_path}?page={Page + 1}&pageNumber={PageSize}";
+                if (_searchTerm != null)
+                {
+                    url += $"&search={_searchTerm}";
+                }
+
+                return url;
+            }
+        }
+
+        public string PreviousPage
+        {
+            get
+            {
+                if (Page <= 1)
+                {
+                    return null;
+                }
+                
+                var url = $"/{_path}?page={Page - 1}&pageNumber={PageSize}";
+                if (_searchTerm != null)
+                {
+                    url += $"&search={_searchTerm}";
+                }
+
+                return url;
+            }
+        }
 
         public ListResponseModel(SearchRequestModel searchModel, IEnumerable<T> items, int totalNumberOfItems, string path)
         {
@@ -24,11 +60,12 @@ namespace MyFace.Models.Response
             Page = searchModel.Page;
             PageSize = searchModel.PageSize;
             _path = path;
+            _searchTerm = searchModel.Search;
         }
         
         private bool HasNextPage()
         {
-            return Page * PageSize >= TotalNumberOfItems;
+            return Page * PageSize < TotalNumberOfItems;
         }
     }
 

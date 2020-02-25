@@ -29,7 +29,7 @@ namespace MyFace
                 options.UseLoggerFactory(LoggerFactory);
                 options.UseSqlite("Data Source=myface.db");
             });
-
+            
             services.AddControllers();
             
             services.AddTransient<IPostsRepo, PostsRepo>();
