@@ -6,7 +6,7 @@
         
         public string Search
         {
-            get => _search.ToLower();
+            get => _search?.ToLower();
             set => _search = value;
         }
 
