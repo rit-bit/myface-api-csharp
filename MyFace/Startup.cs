@@ -31,11 +31,11 @@ namespace MyFace
                 options.UseLoggerFactory(LoggerFactory);
                 options.UseSqlite("Data Source=myface.db");
             });
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy(CORS_POLICY_NAME, builder => { builder.WithOrigins("http://localhost:3000"); });
-            })
+            });
             
             services.AddControllers();
             
