@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MyFace.Models.Database;
 
 namespace MyFace.Data
@@ -8,52 +9,26 @@ namespace MyFace.Data
     {
         public static IEnumerable<Interaction> GetInteractions()
         {
-            return new List<Interaction>
+            return Enumerable.Range(1, 1000)
+                .Select(_ => CreateRandomPostUserPair())
+                .Distinct()
+                .Select(CreateRandomInteraction);
+        }
+
+        private static Tuple<int, int> CreateRandomPostUserPair()
+        {
+            return new Tuple<int, int>(RandomNumberGenerator.GetPostId(), RandomNumberGenerator.GetUserId());
+        }
+
+        private static Interaction CreateRandomInteraction(Tuple<int, int> postUserPair)
+        {
+            return new Interaction
             {
-                new Interaction
-                {
-                    Type = InteractionType.LIKE,
-                    Date = DateTime.Now,
-                    PostId = 1,
-                    UserId = 1,
-                },
-                new Interaction
-                {
-                    Type = InteractionType.LIKE,
-                    Date = DateTime.Now,
-                    PostId = 8,
-                    UserId = 2,
-                },
-                new Interaction
-                {
-                    Type = InteractionType.LIKE,
-                    Date = DateTime.Now,
-                    PostId = 4,
-                    UserId = 3,
-                },
-                new Interaction
-                {
-                    Type = InteractionType.DISLIKE,
-                    Date = DateTime.Now,
-                    PostId = 4,
-                    UserId = 4,
-                },
-                new Interaction
-                {
-                    Type = InteractionType.LIKE,
-                    Date = DateTime.Now,
-                    PostId = 7,
-                    UserId = 5,
-                },
-                new Interaction
-                {
-                    Type = InteractionType.DISLIKE,
-                    Date = DateTime.Now,
-                    PostId = 12,
-                    UserId = 5,
-                },
+                PostId = postUserPair.Item1,
+                UserId = postUserPair.Item2,
+                Type = RandomNumberGenerator.GetInteractionType(),
+                Date = DateGenerator.GetPostDate(),
             };
         }
-        
     }
 }
