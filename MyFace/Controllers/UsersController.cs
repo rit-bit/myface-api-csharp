@@ -32,7 +32,7 @@ namespace MyFace.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult CreateUser(CreateUserRequestModel newUser)
+        public IActionResult CreateUser([FromBody] CreateUserRequestModel newUser)
         {
             if (!ModelState.IsValid)
             {
@@ -41,7 +41,7 @@ namespace MyFace.Controllers
             
             var user = _users.Create(newUser);
 
-            var url = Url.Action("UserDetails", user.Id);
+            var url = Url.Action("UserDetails", new { id = user.Id });
             var responseViewModel = new UserResponseModel(user);
             return Created(url, responseViewModel);
         }

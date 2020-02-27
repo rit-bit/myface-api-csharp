@@ -75,7 +75,7 @@ namespace MyFace.Repositories
             });
             _context.SaveChanges();
 
-            return insertResponse.Entity;
+            return GetById(insertResponse.Entity.Id);
         }
     }
 }

@@ -62,7 +62,7 @@ namespace MyFace.Repositories
                 UserId = postModel.UserId,
             });
             _context.SaveChanges();
-            return insertResult.Entity;
+            return GetById(insertResult.Entity.Id);
         }
 
         public Post AddInteraction(int id, CreateInteractionRequestModel newInteraction)
