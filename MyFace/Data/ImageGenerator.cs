@@ -15,9 +15,9 @@ namespace MyFace.Data
             return GetImage(100 + index, 1600, 900);
         }
 
-        public static string GetProfileImage(int index)
+        public static string GetProfileImage(string username)
         {
-            return GetImage(300 + index, 600, 600);
+            return $"https://robohash.org/{username}?set=any&bgset=any";
         }
 
         public static string GetCoverImage(int index)
