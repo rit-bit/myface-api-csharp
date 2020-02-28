@@ -40,7 +40,7 @@ namespace MyFace.Repositories
         public int Count(SearchRequestModel searchModel)
         {
             return _context.Posts
-                .Count(p => searchModel.Search != null && p.Message.Contains(searchModel.Search));
+                .Count(p => searchModel.Search == null || p.Message.Contains(searchModel.Search));
         }
 
         public Post GetById(int id)
