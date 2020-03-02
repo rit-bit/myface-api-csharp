@@ -2,7 +2,7 @@
 
 namespace MyFace.Models.Request
 {
-    public class CreateUserRequestModel
+    public class CreateUserRequest
     {
         [Required]
         [StringLength(70)]

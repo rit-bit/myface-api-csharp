@@ -1,6 +1,6 @@
 ﻿namespace MyFace.Models.Request
 {
-    public class SearchRequestModel
+    public class SearchRequest
     {
         private string _search;
         

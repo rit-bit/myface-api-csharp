@@ -17,22 +17,22 @@ namespace MyFace.Controllers
         }
         
         [HttpGet("")]
-        public ActionResult<UserListResponseModel> ListUsers([FromQuery] SearchRequestModel searchModel)
+        public ActionResult<UserListResponse> Search([FromQuery] SearchRequest search)
         {
-            var users = _users.GetAll(searchModel);
-            var userCount = _users.Count(searchModel);
-            return UserListResponseModel.Create(searchModel, users, userCount);
+            var users = _users.Search(search);
+            var userCount = _users.Count(search);
+            return UserListResponse.Create(search, users, userCount);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<UserResponseModel> UserDetails([FromRoute] int id)
+        public ActionResult<UserResponse> GetById([FromRoute] int id)
         {
             var user = _users.GetById(id);
-            return new UserResponseModel(user);
+            return new UserResponse(user);
         }
 
         [HttpPost("create")]
-        public IActionResult CreateUser([FromBody] CreateUserRequestModel newUser)
+        public IActionResult Create([FromBody] CreateUserRequest newUser)
         {
             if (!ModelState.IsValid)
             {
@@ -41,9 +41,28 @@ namespace MyFace.Controllers
             
             var user = _users.Create(newUser);
 
-            var url = Url.Action("UserDetails", new { id = user.Id });
-            var responseViewModel = new UserResponseModel(user);
+            var url = Url.Action("GetById", new { id = user.Id });
+            var responseViewModel = new UserResponse(user);
             return Created(url, responseViewModel);
+        }
+
+        [HttpPatch("{id}/update")]
+        public ActionResult<UserResponse> Update([FromRoute] int id, [FromBody] UpdateUserRequest update)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = _users.Update(id, update);
+            return new UserResponse(user);
+        }
+        
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            _users.Delete(id);
+            return Ok();
         }
     }
 }

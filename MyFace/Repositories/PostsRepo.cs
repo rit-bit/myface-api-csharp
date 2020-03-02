@@ -9,11 +9,12 @@ namespace MyFace.Repositories
 {
     public interface IPostsRepo
     {
-        IEnumerable<Post> GetAll(SearchRequestModel searchModel);
-        int Count(SearchRequestModel searchModel);
+        IEnumerable<Post> Search(SearchRequest search);
+        int Count(SearchRequest search);
         Post GetById(int id);
-        Post CreatePost(CreatePostRequestModel postModel);
-        Post AddInteraction(int id, CreateInteractionRequestModel newInteraction);
+        Post Create(CreatePostRequest post);
+        Post Update(int id, UpdatePostRequest update);
+        void Delete(int id);
     }
     
     public class PostsRepo : IPostsRepo
@@ -25,60 +26,58 @@ namespace MyFace.Repositories
             _context = context;
         }
         
-        public IEnumerable<Post> GetAll(SearchRequestModel searchModel)
+        public IEnumerable<Post> Search(SearchRequest search)
         {
             return _context.Posts
-                .Include(p => p.User)
-                .Include(p => p.Interactions).ThenInclude(i => i.User)
-                .Include(p => p.Interactions).ThenInclude(i => i.Post)
                 .OrderByDescending(p => p.PostedAt)
-                .Where(p => searchModel.Search == null || p.Message.ToLower().Contains(searchModel.Search))
-                .Skip((searchModel.Page - 1) * searchModel.PageSize)
-                .Take(searchModel.PageSize);
+                .Where(p => search.Search == null || p.Message.ToLower().Contains(search.Search))
+                .Skip((search.Page - 1) * search.PageSize)
+                .Take(search.PageSize);
         }
 
-        public int Count(SearchRequestModel searchModel)
+        public int Count(SearchRequest search)
         {
             return _context.Posts
-                .Count(p => searchModel.Search == null || p.Message.Contains(searchModel.Search));
+                .Count(p => search.Search == null || p.Message.Contains(search.Search));
         }
 
         public Post GetById(int id)
         {
             return _context.Posts
-                .Include(p => p.User)
-                .Include(p => p.Interactions).ThenInclude(i => i.User)
-                .Include(p => p.Interactions).ThenInclude(i => i.Post)
                 .Single(post => post.Id == id);
         }
 
-        public Post CreatePost(CreatePostRequestModel postModel)
+        public Post Create(CreatePostRequest post)
         {
             var insertResult = _context.Posts.Add(new Post
             {
-                ImageUrl = postModel.ImageUrl,
-                Message = postModel.Message,
+                ImageUrl = post.ImageUrl,
+                Message = post.Message,
                 PostedAt = DateTime.Now,
-                UserId = postModel.UserId,
+                UserId = post.UserId,
             });
             _context.SaveChanges();
-            return GetById(insertResult.Entity.Id);
+            return insertResult.Entity;
         }
 
-        public Post AddInteraction(int id, CreateInteractionRequestModel newInteraction)
+        public Post Update(int id, UpdatePostRequest update)
         {
             var post = GetById(id);
-            
-            post.Interactions.Add(new Interaction
-            {
-                Type = newInteraction.InteractionType,
-                PostId = id,
-                UserId = newInteraction.UserId,
-                Date = DateTime.Now,
-            });
+
+            post.Message = update.Message;
+            post.ImageUrl = update.ImageUrl;
+
+            _context.Posts.Update(post);
             _context.SaveChanges();
             
             return post;
+        }
+
+        public void Delete(int id)
+        {
+            var post = GetById(id);
+            _context.Posts.Remove(post);
+            _context.SaveChanges();
         }
     }
 }

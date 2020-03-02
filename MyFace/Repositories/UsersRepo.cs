@@ -8,10 +8,12 @@ namespace MyFace.Repositories
 {
     public interface IUsersRepo
     {
-        IEnumerable<User> GetAll(SearchRequestModel searchModel);
-        int Count(SearchRequestModel searchModel);
+        IEnumerable<User> Search(SearchRequest search);
+        int Count(SearchRequest search);
         User GetById(int id);
-        User Create(CreateUserRequestModel newUser);
+        User Create(CreateUserRequest newUser);
+        User Update(int id, UpdateUserRequest update);
+        void Delete(int id);
     }
     
     public class UsersRepo : IUsersRepo
@@ -23,46 +25,40 @@ namespace MyFace.Repositories
             _context = context;
         }
         
-        public IEnumerable<User> GetAll(SearchRequestModel searchModel)
+        public IEnumerable<User> Search(SearchRequest search)
         {
             return _context.Users
-                .Include(u => u.Posts)
-                .Include(u => u.Interactions).ThenInclude(i => i.User)
-                .Include(u => u.Interactions).ThenInclude(i => i.Post)
-                .Where(p => searchModel.Search == null || 
+                .Where(p => search.Search == null || 
                             (
-                                p.FirstName.ToLower().Contains(searchModel.Search) ||
-                                p.LastName.ToLower().Contains(searchModel.Search) ||
-                                p.Email.ToLower().Contains(searchModel.Search) ||
-                                p.Username.ToLower().Contains(searchModel.Search)
+                                p.FirstName.ToLower().Contains(search.Search) ||
+                                p.LastName.ToLower().Contains(search.Search) ||
+                                p.Email.ToLower().Contains(search.Search) ||
+                                p.Username.ToLower().Contains(search.Search)
                             ))
                 .OrderBy(u => u.Username)
-                .Skip((searchModel.Page - 1) * searchModel.PageSize)
-                .Take(searchModel.PageSize);
+                .Skip((search.Page - 1) * search.PageSize)
+                .Take(search.PageSize);
         }
 
-        public int Count(SearchRequestModel searchModel)
+        public int Count(SearchRequest search)
         {
             return _context.Users
-                .Count(p => searchModel.Search == null || 
+                .Count(p => search.Search == null || 
                             (
-                                p.FirstName.ToLower().Contains(searchModel.Search) ||
-                                p.LastName.ToLower().Contains(searchModel.Search) ||
-                                p.Email.ToLower().Contains(searchModel.Search) ||
-                                p.Username.ToLower().Contains(searchModel.Search)
+                                p.FirstName.ToLower().Contains(search.Search) ||
+                                p.LastName.ToLower().Contains(search.Search) ||
+                                p.Email.ToLower().Contains(search.Search) ||
+                                p.Username.ToLower().Contains(search.Search)
                             ));
         }
 
         public User GetById(int id)
         {
             return _context.Users
-                .Include(u => u.Posts)
-                .Include(u => u.Interactions).ThenInclude(i => i.User)
-                .Include(u => u.Interactions).ThenInclude(i => i.Post)
                 .Single(user => user.Id == id);
         }
 
-        public User Create(CreateUserRequestModel newUser)
+        public User Create(CreateUserRequest newUser)
         {
             var insertResponse = _context.Users.Add(new User
             {
@@ -75,7 +71,31 @@ namespace MyFace.Repositories
             });
             _context.SaveChanges();
 
-            return GetById(insertResponse.Entity.Id);
+            return insertResponse.Entity;
+        }
+
+        public User Update(int id, UpdateUserRequest update)
+        {
+            var user = GetById(id);
+
+            user.FirstName = update.FirstName;
+            user.LastName = update.LastName;
+            user.Username = update.Username;
+            user.Email = update.Email;
+            user.ProfileImageUrl = update.ProfileImageUrl;
+            user.CoverImageUrl = update.CoverImageUrl;
+
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            return user;
+        }
+
+        public void Delete(int id)
+        {
+            var user = GetById(id);
+            _context.Users.Remove(user);
+            _context.SaveChanges();
         }
     }
 }

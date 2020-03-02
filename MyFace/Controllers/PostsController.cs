@@ -17,41 +17,52 @@ namespace MyFace.Controllers
         }
         
         [HttpGet("")]
-        public ActionResult<PostListResponseModel> ListPosts([FromQuery] SearchRequestModel searchModel)
+        public ActionResult<PostListResponse> Search([FromQuery] SearchRequest search)
         {
-            var posts = _posts.GetAll(searchModel);
-            var postCount = _posts.Count(searchModel);
-            return PostListResponseModel.Create(searchModel, posts, postCount);
+            var posts = _posts.Search(search);
+            var postCount = _posts.Count(search);
+            return PostListResponse.Create(search, posts, postCount);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<PostResponseModel> PostDetails([FromRoute] int id)
+        public ActionResult<PostResponse> GetById([FromRoute] int id)
         {
             var post = _posts.GetById(id);
-            return new PostResponseModel(post);
+            return new PostResponse(post);
         }
 
         [HttpPost("create")]
-        public IActionResult CreatePost([FromBody] CreatePostRequestModel newPost)
+        public IActionResult Create([FromBody] CreatePostRequest newPost)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             
-            var post = _posts.CreatePost(newPost);
+            var post = _posts.Create(newPost);
 
-            var url = Url.Action("PostDetails", new { id = post.Id });
-            var postResponse = new PostResponseModel(post);
+            var url = Url.Action("GetById", new { id = post.Id });
+            var postResponse = new PostResponse(post);
             return Created(url, postResponse);
-
         }
 
-        [HttpPost("{id}/add-interaction")]
-        public IActionResult AddInteraction([FromRoute] int id, CreateInteractionRequestModel newInteraction)
+        [HttpPatch("{id}/update")]
+        public ActionResult<PostResponse> Update([FromRoute] int id, [FromBody] UpdatePostRequest update)
         {
-            var post = _posts.AddInteraction(id, newInteraction);
-            return new OkObjectResult(post);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var post = _posts.Update(id, update);
+            return new PostResponse(post);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            _posts.Delete(id);
+            return Ok();
         }
     }
 }
