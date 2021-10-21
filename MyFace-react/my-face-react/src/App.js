@@ -7,6 +7,7 @@ import {
   Redirect
 } from "react-router-dom";
 import {UserView} from "./views/User.view";
+import {Footer} from "./views/Footer.partial";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           </Route>
         </Switch>
       </div>
+      <Footer/>
     </Router>
   );
 }
