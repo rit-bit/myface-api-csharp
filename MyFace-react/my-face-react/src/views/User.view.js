@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import users from './Test.data'
 
 export function UserView() {
-    // user = GEtAPI()
+
+    useEffect(() => {
+        try {
+            // const res = await fetch("http://localhost:5001/posts")
+            fetch("https://localhost:5001/posts").then((res) => {
+                console.log(res)
+            }).catch((err)=>{
+
+            })
+            //const json = res.json();
+            // console.log(res);
+        } catch (error) {
+            console.log("error: " + error)
+        }
+    }, [])
+
     return (
         <div className={"line-wrap-container"}>
             {users.map((user, index) =>
@@ -16,8 +31,8 @@ function UserContainer(props) {
     return (
         <div className={"user-profile align-centre"}>
             <UserProfile image={props.userdata.image} name={props.userdata.name} />
-            {props.userdata.posts.map((post, index) => 
-            <UserRecentPosts post={post}/>)}
+            {props.userdata.posts.map((post, index) =>
+                <UserRecentPosts post={post} />)}
         </div>
     )
 }
@@ -33,9 +48,9 @@ function UserProfile(props) {
 }
 
 function UserRecentPosts(props) {
-    return(
+    return (
         <div className="post-container card">
-                {props.post.message}
+            {props.post.message}
         </div>
     )
 }
