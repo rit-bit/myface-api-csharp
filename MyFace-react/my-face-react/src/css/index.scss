@@ -1,5 +1,10 @@
 @import '_base';
 
+html {
+  background: rgb(220,215,250);
+  background: linear-gradient(135deg, rgba(220,215,250,1) 0%, rgba(178,200,254,0.7684115882681197) 100%);
+}
+
 body {
   margin: 0;
   font-family: $font-stack;
@@ -35,7 +40,8 @@ code {
 .profile-name {
   font-size: 2rem;
   font-weight: lighter;
-  color: $theme-light-grey;
+  color: black;
+  margin-bottom: 10px;
 }
 
 .line-wrap-container {
@@ -45,5 +51,21 @@ code {
 }
 
 .user-profile {
-  padding: 60px;
+  padding: 40px;
+}
+
+.post-container {
+  padding: 10px;
+  background-color: white;
+}
+
+.post-container.card {
+    text-align: left;
+    margin-top: 10px;
+    max-width: 300px;
+}
+
+.align-centre {
+  align-content: center;
+  text-align: center;
 }
