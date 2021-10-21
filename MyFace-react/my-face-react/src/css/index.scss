@@ -1,0 +1,49 @@
+@import '_base';
+
+body {
+  margin: 0;
+  font-family: $font-stack;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+/* style for user page */
+
+.card {
+  box-shadow: $light-box-shadow;
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: $heavy-box-shadow;
+}
+
+.round-image {
+  border-radius: 50%;
+}
+
+.profile-image {
+  height: 10rem;
+  width: 10rem;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 2rem;
+  font-weight: lighter;
+  color: $theme-light-grey;
+}
+
+.line-wrap-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+}
+
+.user-profile {
+  padding: 60px;
+}

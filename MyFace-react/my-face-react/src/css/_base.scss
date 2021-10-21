@@ -10,14 +10,5 @@ $theme-orange-2: #FF8109;
 $theme-pink-1: #F83F78;
 $theme-purple-1: #BB378A;
 
-body {
-  margin: 0;
-  font-family: $font-stack;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+$light-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+$heavy-box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);

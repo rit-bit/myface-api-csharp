@@ -1,4 +1,4 @@
-import './App.scss';
+import './css/App.scss';
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,6 +6,7 @@ import {
   Link,
   Redirect
 } from "react-router-dom";
+import {UserView} from "./views/User.view";
 
 function App() {
   return (
@@ -25,9 +26,12 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch >
-        <Redirect exact from="/" to="post" />
-          <Route path="/post">
+        <Redirect exact from="/" to="posts" />
+          <Route path="/posts">
             <div>Test</div>
+          </Route>
+          <Route path="/users">
+            <UserView/>
           </Route>
         </Switch>
       </div>

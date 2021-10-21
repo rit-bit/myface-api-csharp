@@ -1,25 +1,22 @@
-@use 'index';
+@import 'base';
 
 .App {
   text-align: center;
 }
 
 .main-navbar {
-
-
   ul {
     list-style: none;
     display: flex;
-
-
     li {
-      
-
       a {
+        background-color: $theme-dark-grey;
         text-decoration: none;
-        background-color: #cdcfd6;
         padding: 8px;
         margin: 5px;
+      }
+      a:visited {
+        color: white;
       }
     }
 
