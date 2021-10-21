@@ -57,7 +57,7 @@ const users = [
         name: "charles",
         posts: [
             {
-                message: "This is my first post. blah blah blah. This is my first post. blah blah blah.",
+                message: "This is my first post. blah blah blah. This is my first post. blah blah blah. This is my first post. blah blah blah.",
 
             },
             {

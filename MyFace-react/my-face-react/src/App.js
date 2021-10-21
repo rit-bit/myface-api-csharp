@@ -7,7 +7,7 @@ import {
   Redirect
 } from "react-router-dom";
 import {UserView} from "./views/User.view";
-import {Footer} from "./views/Footer.partial";
+import Footer from "./views/partial/Footer.partial";
 
 function App() {
   return (

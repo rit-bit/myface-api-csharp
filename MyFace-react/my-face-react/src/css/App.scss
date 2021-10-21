@@ -12,12 +12,19 @@
       a {
         background-color: $theme-dark-grey;
         text-decoration: none;
-        padding: 8px;
-        margin: 5px;
+        padding: 8px 18px;
+        margin: 10px 20px;
         color: white;
+        border-radius: 6px;
+        box-shadow: 0 4px 0 $theme-blue-2;
       }
       a:visited {
         color: white;
+      }
+      a:active {
+        box-shadow: none;
+        top: 4px;
+        position: relative;
       }
     }
 
