@@ -63,7 +63,7 @@ function UserProfile(props) {
 function UserRecentPost(props) {
     return (
         <div className="post-container card">
-            {props.post.message}
+            {props.post.message.length > 60 ? props.post.message.substring(0, 60).trim() +"..." : props.post.message}
         </div>
     )
 }
