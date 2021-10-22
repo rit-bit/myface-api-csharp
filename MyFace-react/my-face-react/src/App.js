@@ -6,7 +6,7 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import {UserView} from "./views/User.view";
+import {HomeView} from "./views/Home.view";
 import {Footer} from "./views/partial/Footer.partial";
 import {Header} from "./views/partial/Header.partial";
 
@@ -18,7 +18,7 @@ function App() {
         <Switch >
         <Redirect exact from="/" to="home" />
           <Route path="/home">
-            <UserView/>
+            <HomeView/>
           </Route>
         </Switch>
         <Footer/>

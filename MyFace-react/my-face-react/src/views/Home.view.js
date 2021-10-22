@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 // import users from './Test.data'
 
-export function UserView() {
+export function HomeView() {
 
-    const [users, setUsers] = useState({"items": []});
+    const [posts, setPosts] = useState({"items": []});
 
     useEffect(() => {
         try {
@@ -11,7 +11,7 @@ export function UserView() {
 
             fetch("https://localhost:5001/posts")
                 .then(response => response.json())
-                .then(json => setUsers(json))
+                .then(json => setPosts(json))
                 .catch(error => console.log("Error: " + error))
 
             // const json = res.json();
@@ -23,14 +23,14 @@ export function UserView() {
 
     return (
         <div className={"line-wrap-container"}>
-            {users.items.map((user, index) =>
-                <UserContainer key={"user: " + index} userdata={user} />
+            {posts.items.map((user, index) =>
+                <UserPostContainer key={"user: " + index} userdata={user} />
             )}
         </div>
     )
 }
 
-function UserContainer(props) {
+function UserPostContainer(props) {
     return (
         <div className={"user-profile align-centre"}>
             <UserProfile image={props.userdata.image} name={props.userdata.name} />
