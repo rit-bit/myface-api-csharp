@@ -21,6 +21,7 @@ code {
 .card {
   box-shadow: $light-box-shadow;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .card:hover {
