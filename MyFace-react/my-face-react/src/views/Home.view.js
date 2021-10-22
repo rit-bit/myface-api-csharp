@@ -18,11 +18,6 @@ import {UserModal} from "./partial/UserModal.partial";
 //     DisplayModal: () => DisplayModal()
 // })
 
-function DisplayModal() {
-    // setUserModalState(true);
-    console.log("Clicked");
-}
-
 export function HomeView() {
 
     const [userPosts, setUserPosts] = useState();
@@ -43,7 +38,7 @@ export function HomeView() {
             .finally(() => {
             })
     }, [])
-
+    
     if (!userPosts) {
         return <p>
             Loading...
@@ -52,14 +47,15 @@ export function HomeView() {
 
     return (
         // <userModalContext.Provider>
+        
         <>
             <div className={"line-wrap-container"}>
                 {Object.entries(userPosts).map(([key, value]) => {
-                    return <UserPostContainer onclick key={"user: " + key} userdata={value} setSel={() => setSelectedUser(key)}/>
+                    return <UserPostContainer onclick key={"user: " + key} userdata={value} setSel={() => setSelectedUser(userPosts[key])}/>
                 })
                 }
             </div>
-            <UserModal userId={selectedUser} onClose={() => setSelectedUser(null)}/>
+            <UserModal user={selectedUser} onClose={() => setSelectedUser(null)}/>
         </>
         // </userModalContext.Provider>
     )
@@ -76,7 +72,7 @@ function UserPostContainer(props) {
     )
 }
 
-function UserProfile(props) {
+export function UserProfile(props) {
     // const userModalContext = useContext(userModalContext);
     return (
         <div className="align-centre">
@@ -97,18 +93,19 @@ function UserRecentPost(props) {
 
 function CreateUsersAndAddPosts(json) {
     const users = {};
-    json.items.map((post, index) => {
-        const id = json.items[index].postedBy.id;
-        const name = json.items[index].postedBy.displayName;
-        const profileImage = json.items[index].postedBy.profileImageUrl;
+    json.items.map((post) => {
+        const id = post.postedBy.id;
+        const name = post.postedBy.displayName;
+        const email = post.postedBy.email;
+        const profileImage = post.postedBy.profileImageUrl;
         // console.log("Id: " + id);
         // console.log("name: " + name);
-
+        // console.log("email: " + email);
         const postObject = {
-            id: json.items[index].id,
-            message: json.items[index].message,
-            imageUrl: json.items[index].imageUrl,
-            postedAt: json.items[index].postedAt,
+            id: post.id,
+            message: post.message,
+            imageUrl: post.imageUrl,
+            postedAt: post.postedAt,
         }
 
         if (users[id]) {
@@ -116,6 +113,7 @@ function CreateUsersAndAddPosts(json) {
         } else {
             users[id] = {
                 name: name,
+                email: email,
                 profileImage: profileImage,
                 posts: [
                     postObject
