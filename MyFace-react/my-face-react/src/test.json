@@ -1,19 +1,14 @@
-users:
-  {"profileImage":"https://robohash.org/kplacido0?set=any&bgset=any",
-  "posts":[
-    {
-      "id":101,
-      "message":"For the 216th time, he said he would quit drinking soda after this last Coke.",
-      "imageUrl":"https://i.picsum.photos/id/101/1600/900.jpg",
-      "postedAt":"2021-10-15T04:41:46.9739307"
-    }
-  ]
-}
-
-users:
-{"name":"Kania Placido",
-"profileImage":"https://robohash.org/kplacido0?set=any&bgset=any",
-"posts":[
-{"id":101,"message":"For the 216th time, he said he would quit drinking soda after this last Coke.",
-  "imageUrl":"https://i.picsum.photos/id/101/1600/900.jpg","postedAt":"2021-10-15T04:41:46.9739307"}
-]}
+[
+  {
+    "id": 71,
+    "message": "She had a habit of taking showers in lemonade.",
+    "imageUrl": "https://i.picsum.photos/id/296/1600/900.jpg",
+    "postedAt": "2021-10-12T01:40:22.1485761"
+  },
+  {
+    "id": 170,
+    "message": "Some bathing suits just shouldn’t be worn by some people.",
+    "imageUrl": "https://i.picsum.photos/id/104/1600/900.jpg",
+    "postedAt": "2021-10-11T21:52:22.1423934"
+  }
+]

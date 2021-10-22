@@ -41,7 +41,9 @@ function UserPostWithDetail(props) {
     console.log("Post: ", JSON.stringify(props.post))
     return(
         <div>
-            <img src={props.post.imageUrl} alt=""/>
+            <img src={props.post.imageUrl} alt="" width={360}/>
+            <p>{props.post.message}</p>
+            <p>{}</p>
         </div>
     );
 }
