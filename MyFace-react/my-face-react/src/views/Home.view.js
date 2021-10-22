@@ -23,13 +23,18 @@ export function HomeView() {
             })
     }, [])
 
-
-
+    if (!userPosts) {
+        return <p>
+            Loading...
+        </p>
+    }
+    // console.log(JSON.stringify(userPosts));
     return (
         <div className={"line-wrap-container"}>
-            {posts.map((user, index) =>
-                <UserPostContainer key={"user: " + index} userdata={user} />
-            )}
+            {Object.entries(userPosts).map(([key, value]) => {
+                return <UserPostContainer key={"user: " + key} userdata={value} />
+            })
+            }
         </div>
     )
 }
@@ -37,9 +42,10 @@ export function HomeView() {
 function UserPostContainer(props) {
     return (
         <div className={"user-profile align-centre"}>
-            <UserProfile image={props.userdata.image} name={props.userdata.name} />
+            {console.log(JSON.stringify(props.userdata))}
+            <UserProfile image={props.userdata.profileImage} name={props.userdata.name} />
             {props.userdata.posts.map((post, index) =>
-                <UserRecentPosts post={post} />)}
+                <UserRecentPost post={post} />)}
         </div>
     )
 }
@@ -54,7 +60,7 @@ function UserProfile(props) {
     )
 }
 
-function UserRecentPosts(props) {
+function UserRecentPost(props) {
     return (
         <div className="post-container card">
             {props.post.message}
@@ -90,9 +96,9 @@ function CreateUsersAndAddPosts(json){
             }
         }
     })
-    console.log("users length: " + users[81].posts.length);
-    console.log("user 1: " + users[2].name);
-    console.log("user 1 post: " + users[0].post[2].message);
+    // console.log("users length: " + users[81].posts.length);
+    // console.log("user 1: " + users[2].name);
+    // console.log("user 1 post: " + users[0].post[2].message);
     return users;
 }
 
