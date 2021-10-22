@@ -1,0 +1,19 @@
+users:
+  {"profileImage":"https://robohash.org/kplacido0?set=any&bgset=any",
+  "posts":[
+    {
+      "id":101,
+      "message":"For the 216th time, he said he would quit drinking soda after this last Coke.",
+      "imageUrl":"https://i.picsum.photos/id/101/1600/900.jpg",
+      "postedAt":"2021-10-15T04:41:46.9739307"
+    }
+  ]
+}
+
+users:
+{"name":"Kania Placido",
+"profileImage":"https://robohash.org/kplacido0?set=any&bgset=any",
+"posts":[
+{"id":101,"message":"For the 216th time, he said he would quit drinking soda after this last Coke.",
+  "imageUrl":"https://i.picsum.photos/id/101/1600/900.jpg","postedAt":"2021-10-15T04:41:46.9739307"}
+]}
