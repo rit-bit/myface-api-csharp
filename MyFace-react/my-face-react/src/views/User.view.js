@@ -1,18 +1,21 @@
-import React, { useEffect } from 'react';
-import users from './Test.data'
+import React, { useState, useEffect } from 'react';
+// import users from './Test.data'
 
 export function UserView() {
 
+    const [users, setUsers] = useState({"items": []});
+
     useEffect(() => {
         try {
-            // const res = await fetch("http://localhost:5001/posts")
-            fetch("https://localhost:5001/posts").then((res) => {
-                console.log(res)
-            }).catch((err)=>{
+            //const res = await fetch("http://localhost:5001/posts")
 
-            })
-            //const json = res.json();
-            // console.log(res);
+            fetch("https://localhost:5001/posts")
+                .then(response => response.json())
+                .then(json => setUsers(json))
+                .catch(error => console.log("Error: " + error))
+
+            // const json = res.json();
+            // console.log(json);
         } catch (error) {
             console.log("error: " + error)
         }
@@ -20,7 +23,7 @@ export function UserView() {
 
     return (
         <div className={"line-wrap-container"}>
-            {users.map((user, index) =>
+            {users.items.map((user, index) =>
                 <UserContainer key={"user: " + index} userdata={user} />
             )}
         </div>
