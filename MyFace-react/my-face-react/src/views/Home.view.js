@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import posts from './Test.data'
 
 export function HomeView() {
 
@@ -40,11 +39,12 @@ export function HomeView() {
 }
 
 function UserPostContainer(props) {
+    const twoPosts = props.userdata.posts.slice(0,2);
     return (
         <div className={"user-profile align-centre"}>
             {console.log(JSON.stringify(props.userdata))}
             <UserProfile image={props.userdata.profileImage} name={props.userdata.name} />
-            {props.userdata.posts.map((post, index) =>
+            {twoPosts.map((post, index) =>
                 <UserRecentPost post={post} />)}
         </div>
     )
