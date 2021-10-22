@@ -1,24 +1,46 @@
-import React, { useState, useEffect } from 'react';
+// HomeView
+//  - [selectedUser, setSelectedUser] = useState(null)
+//  - User A
+//      - Profile modal
+//      - Posts
+//          - Post 1
+//          - Post 2
+//  - User B
+//      - Profile modal
+//      - Posts
+//          - Post 3
+//          - Post 4
+
+import React, {useState, useEffect, useContext} from 'react';
+import {UserModal} from "./partial/UserModal.partial";
+
+// const userModalContext = React.createContext({
+//     DisplayModal: () => DisplayModal()
+// })
+
+function DisplayModal() {
+    // setUserModalState(true);
+    console.log("Clicked");
+}
 
 export function HomeView() {
 
     const [userPosts, setUserPosts] = useState();
+    const [userModalState, setUserModalState] = useState(false);
+
+    const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
-            /*const res = await fetch("https://localhost:5001/posts");
-            setTest(res.json());
-            console.log(test);*/
-
-            fetch("https://localhost:5001/posts")
-                .then(response => {
-                    // console.log("response: " + response)
-                    return response.json()
-                })
-                .then(json => {
-                    setUserPosts(CreateUsersAndAddPosts(json))
-                })
-                .catch(error => console.log("Error: " + error))
-                .finally(()=>{
+        fetch("https://localhost:5001/posts")
+            .then(response => {
+                // console.log("response: " + response)
+                return response.json()
+            })
+            .then(json => {
+                setUserPosts(CreateUsersAndAddPosts(json))
+            })
+            .catch(error => console.log("Error: " + error))
+            .finally(() => {
             })
     }, [])
 
@@ -27,34 +49,39 @@ export function HomeView() {
             Loading...
         </p>
     }
-    // console.log(JSON.stringify(userPosts));
+
     return (
-        <div className={"line-wrap-container"}>
-            {Object.entries(userPosts).map(([key, value]) => {
-                return <UserPostContainer key={"user: " + key} userdata={value} />
-            })
-            }
-        </div>
+        // <userModalContext.Provider>
+        <>
+            <div className={"line-wrap-container"}>
+                {Object.entries(userPosts).map(([key, value]) => {
+                    return <UserPostContainer onclick key={"user: " + key} userdata={value} setSel={() => setSelectedUser(key)}/>
+                })
+                }
+            </div>
+            <UserModal userId={selectedUser} onClose={() => setSelectedUser(null)}/>
+        </>
+        // </userModalContext.Provider>
     )
 }
 
 function UserPostContainer(props) {
-    const twoPosts = props.userdata.posts.slice(0,2);
+    const twoPosts = props.userdata.posts.slice(0, 2);
     return (
         <div className={"user-profile align-centre"}>
-            {console.log(JSON.stringify(props.userdata))}
-            <UserProfile image={props.userdata.profileImage} name={props.userdata.name} />
+            <UserProfile image={props.userdata.profileImage} name={props.userdata.name} setSel={props.setSel}/>
             {twoPosts.map((post, index) =>
-                <UserRecentPost post={post} />)}
+                <UserRecentPost post={post}/>)}
         </div>
     )
 }
 
 function UserProfile(props) {
+    // const userModalContext = useContext(userModalContext);
     return (
         <div className="align-centre">
-            <img src={props.image}
-                className="card profile-image round-image" />
+            <img onClick={props.setSel} src={props.image}
+                 className="card profile-image round-image"/>
             <div className="profile-name">{props.name}</div>
         </div>
     )
@@ -63,14 +90,14 @@ function UserProfile(props) {
 function UserRecentPost(props) {
     return (
         <div className="post-container card">
-            {props.post.message.length > 60 ? props.post.message.substring(0, 60).trim() +"..." : props.post.message}
+            {props.post.message.length > 60 ? props.post.message.substring(0, 60).trim() + "..." : props.post.message}
         </div>
     )
 }
 
-function CreateUsersAndAddPosts(json){
+function CreateUsersAndAddPosts(json) {
     const users = {};
-    json.items.map((post, index)=> {
+    json.items.map((post, index) => {
         const id = json.items[index].postedBy.id;
         const name = json.items[index].postedBy.displayName;
         const profileImage = json.items[index].postedBy.profileImageUrl;
@@ -84,9 +111,9 @@ function CreateUsersAndAddPosts(json){
             postedAt: json.items[index].postedAt,
         }
 
-        if (users[id]){
+        if (users[id]) {
             users[id].posts.push(postObject)
-        }else{
+        } else {
             users[id] = {
                 name: name,
                 profileImage: profileImage,
