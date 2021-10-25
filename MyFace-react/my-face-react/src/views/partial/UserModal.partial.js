@@ -18,7 +18,7 @@ export function UserModal(props){
             <div onClick={(e) => e.stopPropagation()} className="modal-content">
                 <span onClick={props.onClose} className="close">&times;</span>
                 <UserProfile image={props.user.profileImage} name={props.user.name}/>
-                <p>{props.user.email}</p>
+                <p className={"align-centre"}>{props.user.email}</p>
                 <UserPostsWithDetails posts={props.user.posts} />
             </div>
 
@@ -39,11 +39,15 @@ function UserPostsWithDetails(props) {
 
 function UserPostWithDetail(props) {
     console.log("Post: ", JSON.stringify(props.post))
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: "numeric", minute: "numeric" };
+
     return(
-        <div>
-            <img src={props.post.imageUrl} alt="" width={360}/>
-            <p>{props.post.message}</p>
-            <p>{}</p>
+        <div className={"user-post-with-detail"}>
+            <img className={"user-post-image"} src={props.post.imageUrl} alt="" width={360}/>
+            <div className={"user-post-content"}>
+                <p>{props.post.message}</p>
+                <p className={"user-post-date"}>{new Date(Date.parse(props.post.postedAt)).toLocaleString("en-UK", options)}</p>
+            </div>
         </div>
     );
 }
